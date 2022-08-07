@@ -4,8 +4,10 @@ from models.base_model import BaseModel
 
 
 class TestBase(unittest.TestCase):
+    """Test class for unittests for AirBnB Clone project
+    """
 
-#-------------------------- 3. Base Model ---------------------------
+    # ------------------------ 3. Base Model --------------------
     def test_init(self):
         base1 = BaseModel()
 
@@ -37,8 +39,7 @@ class TestBase(unittest.TestCase):
         from_dict = base.to_dict()
         self.assertEqual(base.__class__.__name__, from_dict["__class__"])
 
-
-#------------ 4. Create BaseModel from Dictionary Tests -------------
+    # -------- 4. Create BaseModel from Dictionary Tests -------
     def test_no_kwargs(self):
         base = BaseModel()
         self.assertTrue(base.__class__.__name__ == 'BaseModel')
@@ -65,5 +66,7 @@ class TestBase(unittest.TestCase):
         from_dict = BaseModel(**base_dict)
 
         self.assertEqual(base.updated_at, from_dict.updated_at)
+
+
 if __name__ == "__main__":
     unittest.main()

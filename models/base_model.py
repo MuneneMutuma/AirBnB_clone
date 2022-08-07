@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
-
+"""Module for BaseModel model
+"""
 import uuid
 from datetime import datetime as dt
 from models import storage
@@ -7,6 +8,8 @@ from models import storage
 
 class BaseModel:
     """defines all common attributes/methods for other classes
+
+    BaseModel is the base for other classes to be created
     """
 
     def __init__(self, *args, **kwargs):

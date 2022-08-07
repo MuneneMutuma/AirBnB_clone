@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
-
+"""Module for HBNB Console
+"""
 import cmd
 import json
 from models.base_model import BaseModel
@@ -7,26 +8,30 @@ import models
 from models.mapper import mapper
 
 storage = models.storage
+
+
 class HBNBCommand(cmd.Cmd):
+    """HBNB console for  AirBnB Clone project
+    """
     prompt = "(hbnb)"
     file = None
 
-    #------ 6. Console 0.0.1 ------
+    # ------ 6. Console 0.0.1 ------
     def emptyline(self):
-        'does nothing when an empty line is passed. asks for new prompt'
+        """does nothing when an empty line is passed. asks for new prompt"""
         pass
 
     def do_quit(self, arg):
         'Exit the cmd'
         exit()
-    
+
     def do_EOF(self, arg):
         'Exit the cmd'
         exit()
 
     # --------- 7. Console 0.1 ----------
     def do_create(self, arg):
-        "creates a new instance of BaseModel and saves it to JSON file"
+        """creates a new instance of BaseModel and saves it to JSON file"""
 
         if arg in mapper:
             model = mapper[arg]
@@ -39,7 +44,9 @@ class HBNBCommand(cmd.Cmd):
             print("** class name missing **")
 
     def do_show(self, arg):
-        """Prints string representation of and instance based on class name and id"""
+        """Prints string representation of instance 
+           based on class name and id
+        """
         key = self._check_class_and_id(arg)
         all_objects = storage.all()
         if key is not None:
@@ -54,9 +61,11 @@ class HBNBCommand(cmd.Cmd):
             storage.save()
 
     def do_all(self, arg):
-        "prints all string representation of all instances based or not on the class name"
+        """prints all string representation of all instances
+        based or not on the class name
+        """
         argv = arg.split(" ")
-        
+
         all_objects = storage.all()
         instances_list = list()
 
@@ -77,6 +86,8 @@ class HBNBCommand(cmd.Cmd):
             print("** class doesn't exist **")
 
     def do_update(self, arg):
+        """updates a model with arguments
+        """
         key = self._check_class_and_id(arg)
         update_dict = self._check_attribute_name_and_value(arg)
 
@@ -91,7 +102,9 @@ class HBNBCommand(cmd.Cmd):
 
     # ------- utility functions ----------
     def _check_class_and_id(self, arg):
-        "Error checker for class and id in arguements"
+        """
+        Error checker for class and id in arguements
+        """
         argv = arg.split(" ")
 
         if len(argv[0]) == 0:
@@ -114,6 +127,9 @@ class HBNBCommand(cmd.Cmd):
         return None
 
     def default(self, line):
+        """
+        Default method for none specific do_* commands
+        """
         argv = line.split(".")
 
         if len(argv) == 1:
@@ -145,10 +161,12 @@ class HBNBCommand(cmd.Cmd):
             self.do_update(arg)
 
     def _check_attribute_name_and_value(self, arg):
-        "Error checker for attribute name and value"
+        """
+        Error checker for attribute name and value
+        """
         argv = arg.split(" ")
 
-        #TODO: keep as one string if its starts with double quotes
+        # TODO: keep as one string if its starts with double quotes
 
         if len(argv) == 2:
             print("** attribute name missing **")
