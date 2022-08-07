@@ -3,6 +3,7 @@
   <a href="" rel="noopener">
  <img width=500px height=200px src="./hbnb.png" alt="Project logo"></a>
 </p>
+
 ## Project Description
 
 This is a project from the ALX Software Engineering program. It is a clone for the AirBnB platform. It takes place over several phases. The first one is the creation of a command line using python.
