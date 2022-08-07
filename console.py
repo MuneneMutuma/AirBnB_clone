@@ -121,7 +121,13 @@ class HBNBCommand(cmd.Cmd):
 
         elif argv[1] == "all()":
             self.do_all(argv[0])
-
+        elif argv[1] == "count()":
+            count = 0
+            all_objects = storage.all()
+            for obj in all_objects:
+                if obj.startswith(argv[0]):
+                    count += 1
+            print(count)
         elif argv[1].startswith("show"):
             obj_id = argv[1].split("(")[1].strip(")").strip("'\"")
             arg = f"{argv[0]} {obj_id}"
