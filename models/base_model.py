@@ -2,7 +2,7 @@
 
 import uuid
 from datetime import datetime as dt
-import models
+from models import storage
 
 
 class BaseModel:

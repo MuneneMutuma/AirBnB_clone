@@ -4,13 +4,12 @@ import cmd
 import json
 from models.base_model import BaseModel
 import models
-
+from models.mapper import mapper
 
 storage = models.storage
 class HBNBCommand(cmd.Cmd):
     prompt = "(hbnb)"
     file = None
-    __cls_list = ["BaseModel"]
 
     #------ 6. Console 0.0.1 ------
     def emptyline(self):
@@ -29,8 +28,9 @@ class HBNBCommand(cmd.Cmd):
     def do_create(self, arg):
         "creates a new instance of BaseModel and saves it to JSON file"
 
-        if arg == "BaseModel":
-            new_model = BaseModel()
+        if arg in mapper:
+            model = mapper[arg]
+            new_model = model()
             new_model.save()
             print(new_model.id)
         elif len(arg) > 0:
@@ -56,19 +56,20 @@ class HBNBCommand(cmd.Cmd):
     def do_all(self, arg):
         "prints all string representation of all instances based or not on the class name"
         argv = arg.split(" ")
-        cls_list = HBNBCommand.__cls_list
         
         all_objects = storage.all()
         instances_list = list()
+
         if len(argv[0]) == 0:
             for key in all_objects:
-                instances_list.append(all_objects[key])
+                instances_list.append(str(all_objects[key]))
 
             print(instances_list)
-        elif argv[0] in cls_list:
+
+        elif argv[0] in mapper:
             for key in all_objects:
                 if key.startswith(argv[0]):
-                    instances_list.append(all_objects[key])
+                    instances_list.append(str(all_objects[key]))
 
             print(instances_list)
 
@@ -78,24 +79,25 @@ class HBNBCommand(cmd.Cmd):
     def do_update(self, arg):
         key = self._check_class_and_id(arg)
         update_dict = self._check_attribute_name_and_value(arg)
-        all_objects = storage.all_dict()
 
-        obj_dict = all_objects[key]
+        all_objects = storage.all()
 
-        obj_dict[update_dict["attribute"]] = update_dict["value"]
-        storage.save()
+        if key is not None and update_dict is not None:
+            obj = all_objects[key]
 
+            for attr in update_dict:
+                setattr(obj, attr, update_dict[attr])
+            obj.save()
 
     # ------- utility functions ----------
     def _check_class_and_id(self, arg):
         "Error checker for class and id in arguements"
-        cls_list = HBNBCommand.__cls_list
         argv = arg.split(" ")
 
         if len(argv[0]) == 0:
             print("** class name missing **")
 
-        elif argv[0] not in cls_list:
+        elif argv[0] not in mapper:
             print("** class doesn't exist **")
 
         elif len(argv) == 1:
@@ -111,9 +113,36 @@ class HBNBCommand(cmd.Cmd):
                 print("** no instance found **")
         return None
 
+    def default(self, line):
+        argv = line.split(".")
+
+        if len(argv) == 1:
+            super().default(line)
+
+        elif argv[1] == "all()":
+            self.do_all(argv[0])
+
+        elif argv[1].startswith("show"):
+            obj_id = argv[1].split("(")[1].strip(")").strip("'\"")
+            arg = f"{argv[0]} {obj_id}"
+            self.do_show(arg)
+        elif argv[1].startswith("destroy"):
+            obj_id = argv[1].split("(")[1].strip(")").strip("'\"")
+            arg = f"{argv[0]} {obj_id}"
+            self.do_destroy(arg)
+        elif argv[1].startswith("update"):
+            update_info = argv[1].split('", "')
+            obj_id = update_info[0].split('("')[1]
+            attr_name = update_info[1].strip()
+            attr_value = update_info[2].strip('")')
+            arg = f"{argv[0]} {obj_id} {attr_name} {attr_value}"
+            self.do_update(arg)
+
     def _check_attribute_name_and_value(self, arg):
         "Error checker for attribute name and value"
         argv = arg.split(" ")
+
+        #TODO: keep as one string if its starts with double quotes
 
         if len(argv) == 2:
             print("** attribute name missing **")
@@ -122,7 +151,7 @@ class HBNBCommand(cmd.Cmd):
             print("** value missing **")
 
         else:
-            return {"attribute": argv[2], "value": argv[3].strip('"')}
+            return {argv[2]: argv[3].strip('"\'')}
 
         return None
 
