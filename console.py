@@ -44,7 +44,7 @@ class HBNBCommand(cmd.Cmd):
             print("** class name missing **")
 
     def do_show(self, arg):
-        """Prints string representation of instance 
+        """Prints string representation of instance
            based on class name and id
         """
         key = self._check_class_and_id(arg)
