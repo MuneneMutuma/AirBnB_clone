@@ -8,12 +8,6 @@ class Review(BaseModel):
     """Class for Review model
 
     """
-    def __init__(self, *args, **kwargs):
-        """Constructor for Review Model
-
-        """
-        super().__init__(*args, **kwargs)
-        if kwargs is None or len(kwargs) <= 0:
-            self.place_id = ""
-            self.user_id = ""
-            self.text = ""
+    place_id = ""
+    user_id = ""
+    text = ""

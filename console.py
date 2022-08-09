@@ -89,9 +89,9 @@ class HBNBCommand(cmd.Cmd):
         """updates a model with arguments
         """
         key = self._check_class_and_id(arg)
-        update_dict = self._check_attribute_name_and_value(arg)
-
-        all_objects = storage.all()
+        if key is not None:
+            update_dict = self._check_attribute_name_and_value(arg)
+            all_objects = storage.all()
 
         if key is not None and update_dict is not None:
             obj = all_objects[key]
@@ -174,7 +174,7 @@ class HBNBCommand(cmd.Cmd):
         elif len(argv) == 3:
             print("** value missing **")
 
-        else:
+        elif len(argv) > 3:
             return {argv[2]: argv[3].strip('"\'')}
 
         return None
